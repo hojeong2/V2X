@@ -102,7 +102,7 @@ int parse_map(MapData_t *map){
                 printf("IntersectionReferenceID: # %d \n", ptr->id.id);
                 // Ref point & laneWidth
                 printf("[Ref point] \n lat: %d \n lon: %d \n ele: %d \n ", ptr->refPoint.lat ,ptr->refPoint.Long , ptr->refPoint.elevation);
-                printf("laneWidth: %d \n",ptr->laneWidth);  
+                printf("laneWidth: %d \n",ptr->laneWidth[0]);  
 
                 // Section #2
                 // GenericLane
@@ -113,13 +113,17 @@ int parse_map(MapData_t *map){
                 int len_1 = ptr->laneSet.list.count;
                 
                 for (int i= 0 ; i < len_1; i++)
-                    {
+                {
                     printf("\n \033[0;33m  [GenericLane] \033[0m \n");    
                     printf("lane ID: %d \n" , ptr->laneSet.list.array[i]->laneID); 
                     printf("directionalUse: %d \n" , ptr->laneSet.list.array[i]->laneAttributes.directionalUse.bits_unused);
                     printf("sharedWith: %d \n" , ptr->laneSet.list.array[i]->laneAttributes.sharedWith.bits_unused);
                     printf("laneType: %d \n" , ptr->laneSet.list.array[i]->laneAttributes.laneType.present);
-                    printf("Maeuvers: %d \n ",ptr->laneSet.list.array[i]->maneuvers);
+                    if (ptr->laneSet.list.array[i]->laneAttributes.directionalUse.buf[0] == 64){
+                    
+                    }else{
+                        printf("Maeuvers: %d \n ",ptr->laneSet.list.array[i]->maneuvers->buf[0]);
+                    }
                     printf("Direction %d \n", ptr->laneSet.list.array[i]->laneAttributes.directionalUse.buf[0]); // 128: out  64: in
                     // printf( "check_2 %d \n", ptr->laneSet.list.array[2]->laneAttributes.directionalUse.buf[0]); // 128: out  64: in
                     // printf( "%d \n", ptr->laneSet.list.array[2]->connectsTo->list.array[0]->connectingLane.lane);
@@ -128,7 +132,7 @@ int parse_map(MapData_t *map){
                     int len_2 =ptr->laneSet.list.array[1]->nodeList.choice.nodes.list.count;
           
                         for(int j=0;j<len_2 ;j++){
-                            printf("[Node XY #%d] \n #%d-%d \n x:%d \n y:%d \n",j,ptr->laneSet.list.array[i]->nodeList.choice.nodes.list.array[j]->delta.choice.node_XY6.x,ptr->laneSet.list.array[i]->nodeList.choice.nodes.list.array[j]->delta.choice.node_XY6.y);
+                            printf("[Node XY #%d] \n x:%d \n y:%d \n",j+1,ptr->laneSet.list.array[i]->nodeList.choice.nodes.list.array[j]->delta.choice.node_XY6.x,ptr->laneSet.list.array[i]->nodeList.choice.nodes.list.array[j]->delta.choice.node_XY6.y);
                       
                     }
 
@@ -139,13 +143,15 @@ int parse_map(MapData_t *map){
                             
 
                             }else{
-                                printf("[ConnectingLane #%d] \n lane: %d\n maneuver: %d \n signalGroup: %d \n" ,k, ptr->laneSet.list.array[i]->connectsTo->list.array[k]->connectingLane.lane,ptr->laneSet.list.array[i]->connectsTo->list.array[k]->connectingLane.maneuver,ptr->laneSet.list.array[i]->connectsTo->list.array[k]->signalGroup);
+                                printf("[ConnectingLane #%d] \n lane: %d\n maneuver: %d \n signalGroup: %d \n" ,k+1, ptr->laneSet.list.array[i]->connectsTo->list.array[k]->connectingLane.lane,ptr->laneSet.list.array[i]->connectsTo->list.array[k]->connectingLane.maneuver->buf[0],ptr->laneSet.list.array[i]->connectsTo->list.array[k]->signalGroup[0]);
+                            // Maneuver : 128 = STRAIGHT / 64 = LEFT / 32 = RIGHT
+                            
                             }
                                 
 
                     }
                     
-                    }
+                }
                   
                 // printf("\n \033[0;31m  [End]Check here!!!!!!!!!!!!! \033[0m \n");
 
@@ -159,13 +165,13 @@ int parse_map(MapData_t *map){
                 // Section #1
                 // Intersection name:  KIAPI -1 / 
 
-                printf("\033[0;31m  [KIAPI-2]   \033[0m \n \n");
+                printf("\n\033[0;31m[KIAPI-2]   \033[0m \n \n");
                 printf("Intersection Name: %ld \n", ptr->name);  // need to find out data type..... %d %c %s
                 // IntersectionReferenceID
                 printf("IntersectionReferenceID: # %d \n", ptr->id.id);
                 // Ref point & laneWidth
                 printf("[Ref point] \n lat: %d \n lon: %d \n ele: %d \n ", ptr->refPoint.lat ,ptr->refPoint.Long , ptr->refPoint.elevation);
-                printf("laneWidth: %d \n",ptr->laneWidth);  
+                printf("laneWidth: %d \n",ptr->laneWidth[0]);  
 
                 // Section #2
                 // GenericLane
@@ -176,13 +182,17 @@ int parse_map(MapData_t *map){
                 int len_1 = ptr->laneSet.list.count;
                 
                 for (int i= 0 ; i < len_1; i++)
-                    {
+                {
                     printf("\n \033[0;33m  [GenericLane] \033[0m \n");    
                     printf("lane ID: %d \n" , ptr->laneSet.list.array[i]->laneID); 
                     printf("directionalUse: %d \n" , ptr->laneSet.list.array[i]->laneAttributes.directionalUse.bits_unused);
                     printf("sharedWith: %d \n" , ptr->laneSet.list.array[i]->laneAttributes.sharedWith.bits_unused);
                     printf("laneType: %d \n" , ptr->laneSet.list.array[i]->laneAttributes.laneType.present);
-                    printf("Maeuvers: %d \n ",ptr->laneSet.list.array[i]->maneuvers);
+                    if (ptr->laneSet.list.array[i]->laneAttributes.directionalUse.buf[0] == 64){
+                    
+                    }else{
+                        printf("Maeuvers: %d \n ",ptr->laneSet.list.array[i]->maneuvers->buf[0]);
+                    }
                     printf("Direction %d \n", ptr->laneSet.list.array[i]->laneAttributes.directionalUse.buf[0]); // 128: out  64: in
                     // printf( "check_2 %d \n", ptr->laneSet.list.array[2]->laneAttributes.directionalUse.buf[0]); // 128: out  64: in
                     // printf( "%d \n", ptr->laneSet.list.array[2]->connectsTo->list.array[0]->connectingLane.lane);
@@ -191,7 +201,7 @@ int parse_map(MapData_t *map){
                     int len_2 =ptr->laneSet.list.array[1]->nodeList.choice.nodes.list.count;
           
                         for(int j=0;j<len_2 ;j++){
-                            printf("[Node XY #%d] \n #%d-%d \n x:%d \n y:%d \n",j,ptr->laneSet.list.array[i]->nodeList.choice.nodes.list.array[j]->delta.choice.node_XY6.x,ptr->laneSet.list.array[i]->nodeList.choice.nodes.list.array[j]->delta.choice.node_XY6.y);
+                            printf("[Node XY #%d] \n x:%d \n y:%d \n",j+1,ptr->laneSet.list.array[i]->nodeList.choice.nodes.list.array[j]->delta.choice.node_XY6.x,ptr->laneSet.list.array[i]->nodeList.choice.nodes.list.array[j]->delta.choice.node_XY6.y);
                       
                     }
 
@@ -202,13 +212,15 @@ int parse_map(MapData_t *map){
                             
 
                             }else{
-                                printf("[ConnectingLane #%d] \n lane: %d\n maneuver: %d \n signalGroup: %d \n" ,k, ptr->laneSet.list.array[i]->connectsTo->list.array[k]->connectingLane.lane,ptr->laneSet.list.array[i]->connectsTo->list.array[k]->connectingLane.maneuver,ptr->laneSet.list.array[i]->connectsTo->list.array[k]->signalGroup);
+                                printf("[ConnectingLane #%d] \n lane: %d\n maneuver: %d \n signalGroup: %d \n" ,k+1, ptr->laneSet.list.array[i]->connectsTo->list.array[k]->connectingLane.lane,ptr->laneSet.list.array[i]->connectsTo->list.array[k]->connectingLane.maneuver->buf[0],ptr->laneSet.list.array[i]->connectsTo->list.array[k]->signalGroup[0]);
+                            // Maneuver : 128 = STRAIGHT / 64 = LEFT / 32 = RIGHT
+                            
                             }
                                 
 
                     }
-                
-                    }
+                    
+                }
                   
                 // printf("\n \033[0;31m  [End]Check here!!!!!!!!!!!!! \033[0m \n");
 
@@ -216,9 +228,62 @@ int parse_map(MapData_t *map){
             }
               if (ptr->id.id == 3)
             {
-             
-              
-                printf("\033[0;33m  point # %d \033[0m \n", ptr->id.id);
+                printf("\n\033[0;31m[KIAPI-3]   \033[0m \n \n");
+                printf("Intersection Name: %ld \n", ptr->name);  // need to find out data type..... %d %c %s
+                // IntersectionReferenceID
+                printf("IntersectionReferenceID: # %d \n", ptr->id.id);
+                // Ref point & laneWidth
+                printf("[Ref point] \n lat: %d \n lon: %d \n ele: %d \n ", ptr->refPoint.lat ,ptr->refPoint.Long , ptr->refPoint.elevation);
+                printf("laneWidth: %d \n",ptr->laneWidth[0]);
+
+                int i;
+                int len_1 = ptr->laneSet.list.count;
+                
+                for (int i= 0 ; i < len_1; i++)
+                {
+                    printf("\n \033[0;33m  [GenericLane] \033[0m \n");    
+                    printf("lane ID: %d \n" , ptr->laneSet.list.array[i]->laneID); 
+                    printf("directionalUse: %d \n" , ptr->laneSet.list.array[i]->laneAttributes.directionalUse.bits_unused);
+                    printf("sharedWith: %d \n" , ptr->laneSet.list.array[i]->laneAttributes.sharedWith.bits_unused);
+                    printf("laneType: %d \n" , ptr->laneSet.list.array[i]->laneAttributes.laneType.present);
+                    if (ptr->laneSet.list.array[i]->laneAttributes.directionalUse.buf[0] == 64){
+                    
+                    }else{
+                        printf("Maeuvers: %d \n ",ptr->laneSet.list.array[i]->maneuvers->buf[0]);
+                    }
+                    printf("Direction %d \n", ptr->laneSet.list.array[i]->laneAttributes.directionalUse.buf[0]); // 128: out  64: in
+                    // printf( "check_2 %d \n", ptr->laneSet.list.array[2]->laneAttributes.directionalUse.buf[0]); // 128: out  64: in
+                    // printf( "%d \n", ptr->laneSet.list.array[2]->connectsTo->list.array[0]->connectingLane.lane);
+                    // printf("chceck_1 %d \n" , ptr->laneSet.list.array[0]->connectsTo->list.array[0]->connectingLane.lane);
+                    // printf("chceck_2 %d \n" , ptr->laneSet.list.array[0]->connectsTo->list.array[1]->connectingLane.lane);
+                    int len_2 =ptr->laneSet.list.array[1]->nodeList.choice.nodes.list.count;
+          
+                        for(int j=0;j<len_2 ;j++){
+                            printf("[Node XY #%d] \n x:%d \n y:%d \n",j+1,ptr->laneSet.list.array[i]->nodeList.choice.nodes.list.array[j]->delta.choice.node_XY6.x,ptr->laneSet.list.array[i]->nodeList.choice.nodes.list.array[j]->delta.choice.node_XY6.y);
+                      
+                    }
+
+                    if (ptr->laneSet.list.array[i]->laneAttributes.directionalUse.buf[0] == 64){
+                    
+                    }else{
+                        int len_3 = ptr->laneSet.list.array[i]->connectsTo->list.count;
+                        for(int k=0; k<len_3 ;k++){
+                        // printf("i: %d \n k: %d \n", i,k);
+                        if (ptr->laneSet.list.array[i]->laneAttributes.directionalUse.buf[0] == 64){
+                        
+
+                        }else{
+                            printf("[ConnectingLane #%d] \n lane: %d\n maneuver: %d \n signalGroup: %d \n" ,k+1, ptr->laneSet.list.array[i]->connectsTo->list.array[k]->connectingLane.lane,ptr->laneSet.list.array[i]->connectsTo->list.array[k]->connectingLane.maneuver->buf[0],ptr->laneSet.list.array[i]->connectsTo->list.array[k]->signalGroup[0]);
+                        // Maneuver : 128 = STRAIGHT / 64 = LEFT / 32 = RIGHT
+                        // Maneuvers : sum of maneuver
+                            
+                            }
+                        }        
+
+                    }
+                    
+                }
+
                 return 0;
             }
             
@@ -230,15 +295,11 @@ int parse_map(MapData_t *map){
 }
 
 int parse_spat(SPAT_t *spat){
-    // printf("\033[0;31m [Success]Receiving SpaT data\033[0m \n");
+    // printf("SPAT data !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
     for (int i = 0; i < spat->intersections.list.count; i++)
-    {   
-        printf("\033[0;34m [Success]Receiving SpaT data\033[0m \n");
+    {
         struct IntersectionState *ptr = spat->intersections.list.array[i];
 
-        // MISSION : MAP 메시지에 포함된 Intersection ID 추출
-        //           Intersection 내 Ref Position을 기준으로 Offset Node 좌표 추출
-        //           Node로 연결된 차선의 Line 별 ID와 SignalGroupID를 출력
         // printf("SPAT ID is %d \n", ptr->id.id);
         // printf("Signal Group is %ld \n", ptr->states.list.array[i]->signalGroup);
         // printf("state_time_speed is %d \n", ptr->states.list.array[i]->state_time_speed.list.array[0]->eventState);
@@ -370,11 +431,17 @@ int parse_spat(SPAT_t *spat){
             }
             
         }
+
+        // printf("SPAT ID is [%ld] \n", ptr->id.id);
+        // MISSION : MAP 메시지에 포함된 Intersection ID 추출
+        //           Intersection 내 Ref Position을 기준으로 Offset Node 좌표 추출
+        //           Node로 연결된 차선의 Line 별 ID와 SignalGroupID를 출력
+
+
     }
 
     return 0;
 }
-
 int parse_bsm(BasicSafetyMessage_t *bsm){
  
     // MISSION : BSM 내 temporary ID 추출
@@ -384,5 +451,3 @@ int parse_bsm(BasicSafetyMessage_t *bsm){
  
     return 0;
 }
-
-
